@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+
+using Domain.Models;
+using Domain.Repositories;
 using TakeCommand.Data.Models;
-using TakeCommand.Data.Interfaces;
-using TakeCommand.Data;
 
 namespace TakeCommand.Data.Repositories
 {
@@ -19,40 +17,46 @@ namespace TakeCommand.Data.Repositories
 
         public void AddOrder(Order order)
         {
-            _dbContext.Orders.Add(order);
+            OrderDto orderDto = new OrderDto()
+            {
+                Address = order.Address,
+                Email = order.Email,
+                Total = order.Total
+            };
+            _dbContext.Orders.Add(orderDto);
             _dbContext.SaveChanges();
         }
 
         public void RemoveOrder(Order order)
         {
-            _dbContext.Orders.Remove(order);
+            OrderDto orderDto = new OrderDto()
+            {
+                Id = order.Id,
+                Address = order.Address,
+                Email = order.Email,
+                Total = order.Total
+            };
+            _dbContext.Orders.Remove(orderDto);
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<Order> GetAllOrders()
+        public Order? GetOrderByIdOrNull(int orderId)
         {
-            return _dbContext.Orders.ToList();
-        }
+            var order = _dbContext.Orders.FirstOrDefault(o => o.Id == orderId);
 
-        public Order GetOrderById(int orderId)
-        {
-            return _dbContext.Orders.FirstOrDefault(o => o.Id == orderId);
-        }
-
-        public void PrintFistOrder()
-        {
-            var myOrder = _dbContext.Orders.FirstOrDefault(); // Fetch a specific order
-            
-
-            if (myOrder != null)
+            if (order != null)
             {
-                List<OrderProducts> orderProducts = _dbContext.OrderProducts.Where(op => op.OrderId == myOrder.Id).ToList();
-
-                foreach (var orderProduct in orderProducts)
+                return new Order()
                 {
-                    Console.WriteLine(orderProduct.ProductId);
-                }
+                    Address = order.Address,
+                    Email = order.Email,
+                    Total = order.Total,
+                    Id = order.Id
+                };
             }
+
+            return null;
         }
+        
     }
 }

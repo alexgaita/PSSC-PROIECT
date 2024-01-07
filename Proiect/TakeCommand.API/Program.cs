@@ -1,6 +1,6 @@
+using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using TakeCommand.Data;
-using TakeCommand.Data.Interfaces;
 using TakeCommand.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +20,8 @@ builder.Services.AddDbContext<ShopContext>(options =>
 });
 
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+//TODO add product repository
+//TODO add orderProduct repository
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

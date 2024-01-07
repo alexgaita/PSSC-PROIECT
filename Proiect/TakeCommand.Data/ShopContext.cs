@@ -10,22 +10,22 @@ namespace TakeCommand.Data
         {
         }
 
-        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductDto> Products { get; set; }
 
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDto> Orders { get; set; }
 
-        public DbSet<OrderProducts> OrderProducts { get; set; }
+        public DbSet<OrderProductsDto> OrderProducts { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("Shop");
 
-            modelBuilder.Entity<Product>().ToTable("Product").HasKey(s => s.Id);
+            modelBuilder.Entity<ProductDto>().ToTable("Product").HasKey(s => s.Id);
 
-            modelBuilder.Entity<Order>().ToTable("Order").HasKey(s => s.Id);
+            modelBuilder.Entity<OrderDto>().ToTable("Order").HasKey(s => s.Id);
 
-            modelBuilder.Entity<OrderProducts>().ToTable("Order_Product").HasKey(op => new { op.OrderId, op.ProductId });
+            modelBuilder.Entity<OrderProductsDto>().ToTable("Order_Product").HasKey(op => new { op.OrderId, op.ProductId });
             
         }
 

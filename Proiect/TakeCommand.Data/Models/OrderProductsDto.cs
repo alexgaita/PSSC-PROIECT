@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace TakeCommand.Data.Models
 {
-    public class OrderProducts
+    public class OrderProductsDto
     {
         public int OrderId { get; set; }
         public int ProductId { get; set; }
-        // Additional properties related to the relationship
         public int Quantity { get; set; }
 
         public int Price { get; set; }

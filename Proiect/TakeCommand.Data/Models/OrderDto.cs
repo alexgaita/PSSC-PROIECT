@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TakeCommand.Data.Models
 {
-    public class Order
+    public class OrderDto
     {
         public int Id { get; set; }
         public string Address { get; set; }
@@ -14,7 +14,8 @@ namespace TakeCommand.Data.Models
         public string Email { get; set; }
 
         public int Total { get; set; }
-
+        
+        public bool IsReturned { get; set; }
 
     }
 }
