@@ -1,4 +1,5 @@
 using Domain.Repositories;
+using Domain.Workflows;
 using Microsoft.EntityFrameworkCore;
 using TakeCommand.Data;
 using TakeCommand.Data.Repositories;
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<ShopContext>(options =>
 });
 
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<PlaceOrderWorkflow>();
 //TODO add product repository
 //TODO add orderProduct repository
 

@@ -7,10 +7,14 @@ public static partial class PlaceOrderEvent
 {
     public interface IPlaceOrderEvent { }
     
-   
     public record OrderPlacedSucceededEvent : IPlaceOrderEvent
     {
+       public int OrderId { get; }
        
+       public OrderPlacedSucceededEvent(int orderId)
+       {
+           OrderId = orderId;
+       }
     }
     
     public record OrderPlacedFailedEvent : IPlaceOrderEvent

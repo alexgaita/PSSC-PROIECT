@@ -12,5 +12,7 @@ namespace TakeCommand.Data.Models
         public string Name { get; set; }
         public int Stock { get; set; }
         
+        public int Price { get; set; }
+        
     }
 }

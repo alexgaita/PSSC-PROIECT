@@ -1,6 +1,7 @@
 
 using Domain.Models;
 using Domain.Repositories;
+using LanguageExt;
 using TakeCommand.Data.Models;
 
 namespace TakeCommand.Data.Repositories
@@ -15,19 +16,28 @@ namespace TakeCommand.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public void AddOrder(Order order)
+        public TryAsync<Order> AddOrder(Order order) => async () =>
         {
-            OrderDto orderDto = new OrderDto()
+            var orderDto = new OrderDto()
             {
                 Address = order.Address,
                 Email = order.Email,
                 Total = order.Total
             };
+            
             _dbContext.Orders.Add(orderDto);
-            _dbContext.SaveChanges();
-        }
+            await _dbContext.SaveChangesAsync();
 
-        public void RemoveOrder(Order order)
+            return new Order()
+            {
+                Address = orderDto.Address,
+                Email = orderDto.Email,
+                Total = orderDto.Total,
+                Id = orderDto.Id
+            };
+        };
+
+        public TryAsync<Unit> RemoveOrder(Order order) => async () =>
         {
             OrderDto orderDto = new OrderDto()
             {
@@ -37,26 +47,27 @@ namespace TakeCommand.Data.Repositories
                 Total = order.Total
             };
             _dbContext.Orders.Remove(orderDto);
-            _dbContext.SaveChanges();
-        }
+            await _dbContext.SaveChangesAsync();
+            return Unit.Default;
+        };
 
-        public Order? GetOrderByIdOrNull(int orderId)
+        public TryAsync<Order> GetOrderById(int orderId) => async () =>
         {
-            var order = _dbContext.Orders.FirstOrDefault(o => o.Id == orderId);
+            var order = await _dbContext.Orders.FindAsync(orderId);
 
-            if (order != null)
+            if (order == null)
             {
-                return new Order()
-                {
-                    Address = order.Address,
-                    Email = order.Email,
-                    Total = order.Total,
-                    Id = order.Id
-                };
+                throw new KeyNotFoundException($"Order with id {orderId} was not found");
             }
 
-            return null;
-        }
-        
+            return new Order()
+            {
+                Address = order.Address,
+                Email = order.Email,
+                Total = order.Total,
+                Id = order.Id
+            };
+        };
+
     }
 }

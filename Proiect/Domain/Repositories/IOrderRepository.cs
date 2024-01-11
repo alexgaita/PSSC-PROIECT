@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using Domain.Models;
+using LanguageExt;
+
 
 namespace Domain.Repositories
 {
     public interface IOrderRepository
     {
-        void AddOrder(Order order);
-        void RemoveOrder(Order order);
-        Order? GetOrderByIdOrNull(int orderId);
+        TryAsync<Order> AddOrder(Order order);
+        TryAsync<Unit> RemoveOrder(Order order);
+        TryAsync<Order> GetOrderById(int orderId);
     }
 }
