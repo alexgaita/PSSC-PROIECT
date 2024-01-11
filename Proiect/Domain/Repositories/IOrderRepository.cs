@@ -7,8 +7,8 @@ namespace Domain.Repositories
 {
     public interface IOrderRepository
     {
-        TryAsync<Order> AddOrder(Order order);
-        TryAsync<Unit> RemoveOrder(Order order);
-        TryAsync<Order> GetOrderById(int orderId);
+        Task<Order> AddOrder(PlacedOrder.CalculatedOrder order);
+
+        Task MapOrderToProducts(int orderId, IReadOnlyCollection<ValidatedOrderProduct> products);
     }
 }

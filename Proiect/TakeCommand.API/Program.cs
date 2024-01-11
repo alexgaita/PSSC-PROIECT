@@ -1,8 +1,11 @@
 using Domain.Repositories;
+using Domain.Services;
 using Domain.Workflows;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using TakeCommand.Data;
 using TakeCommand.Data.Repositories;
+using TakeCommand.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +28,15 @@ builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<PlaceOrderWorkflow>();
 //TODO add product repository
 //TODO add orderProduct repository
+
+builder.Services.AddSingleton<IEventSender, ServiceBusTopicEventSender>();
+
+builder.Services.AddAzureClients(client =>
+{
+    client.AddServiceBusClient(builder.Configuration.GetConnectionString("ServiceBus"));
+});
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

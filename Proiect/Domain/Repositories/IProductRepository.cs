@@ -5,7 +5,7 @@ namespace Domain.Repositories;
 
 public interface IProductRepository
 {
-    TryAsync<List<Product>> GetAllProductsByIds(IEnumerable<int> productIds);
+    Task<List<Product>> GetAllProductsByIds(IEnumerable<int> productIds);
     
-    // TryAsync<Unit> UpdateProductsStock(IEnumerable<ValidatedOrderProduct> products);
+    Task UpdateProductsStock(IEnumerable<ValidatedOrderProduct> products);
 }

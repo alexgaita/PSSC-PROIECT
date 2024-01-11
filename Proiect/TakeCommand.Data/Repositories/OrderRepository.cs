@@ -1,5 +1,6 @@
 
 using Domain.Models;
+using static Domain.Models.PlacedOrder;
 using Domain.Repositories;
 using LanguageExt;
 using TakeCommand.Data.Models;
@@ -16,7 +17,7 @@ namespace TakeCommand.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public TryAsync<Order> AddOrder(Order order) => async () =>
+        public async Task<Order> AddOrder(CalculatedOrder order)
         {
             var orderDto = new OrderDto()
             {
@@ -28,46 +29,28 @@ namespace TakeCommand.Data.Repositories
             _dbContext.Orders.Add(orderDto);
             await _dbContext.SaveChangesAsync();
 
-            return new Order()
+            return new Order
             {
                 Address = orderDto.Address,
                 Email = orderDto.Email,
-                Total = orderDto.Total,
-                Id = orderDto.Id
+                Id = orderDto.Id,
+                Total = orderDto.Total
             };
-        };
+        }
 
-        public TryAsync<Unit> RemoveOrder(Order order) => async () =>
+        public async Task MapOrderToProducts(int orderId, IReadOnlyCollection<ValidatedOrderProduct> products)
         {
-            OrderDto orderDto = new OrderDto()
+            var orderProducts = products.Select(product => new OrderProductsDto()
             {
-                Id = order.Id,
-                Address = order.Address,
-                Email = order.Email,
-                Total = order.Total
-            };
-            _dbContext.Orders.Remove(orderDto);
+                OrderId = orderId,
+                ProductId = product.Product.Id,
+                Quantity = product.Quantity,
+                Price = product.Product.Price
+            }).ToList();
+            
+            _dbContext.OrderProducts.AddRange(orderProducts);
             await _dbContext.SaveChangesAsync();
-            return Unit.Default;
-        };
-
-        public TryAsync<Order> GetOrderById(int orderId) => async () =>
-        {
-            var order = await _dbContext.Orders.FindAsync(orderId);
-
-            if (order == null)
-            {
-                throw new KeyNotFoundException($"Order with id {orderId} was not found");
-            }
-
-            return new Order()
-            {
-                Address = order.Address,
-                Email = order.Email,
-                Total = order.Total,
-                Id = order.Id
-            };
-        };
+        }
 
     }
 }
